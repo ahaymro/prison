@@ -1,0 +1,195 @@
+haymro animaw, [1/26/2023 11:06 PM]
+<?php 
+session_start();
+include 'connection.php';
+if (isset($_POST['login'])) {
+ $_SESSION["username"] = $_POST["username"];
+ $_SESSION["password"] = $_POST["password"];
+ $_SESSION['last_time'] = time();
+ {
+ if(!empty($_POST['username']) && !empty($_POST['password'])){
+ $username = $_POST['username'];
+ $password = $_POST['password'];
+ $username = stripslashes($username);
+$password = stripslashes($password);
+$username = mysqli_real_escape_string($con,$username);
+$password = mysqli_real_escape_string($con,$password); 
+   if (empty($username) || empty($password)) {
+ echo "<script>alert('please fill the form!')</script>";
+}
+else{
+    $sql="select *from account where username='$username' and password='$password' and status='1'";
+    $query=mysqli_query($con,$sql);
+$report=mysqli_num_rows($query);
+if ($report>0) {
+   while ($row= mysqli_fetch_assoc($query)) {
+       $user_type=$row['account_type'];
+      /* if ($user_type=="prisoner") {
+    $_SESSION['id']=$row['id'];
+    $_SESSION['serial_no']=$row['serial_no'];
+    $_SESSION['username']=$row['username'];
+    $_SESSION['password']=$row['password'];
+     $_SESSION['zone']=$row['zone'];
+     header("Location:prisoner/index.php");
+       }*/
+/*else*/ if ($user_type=="adminstrator") {
+  $_SESSION["admin_logged"] = "true";
+    $_SESSION['id']=$row['id'];
+    $_SESSION['serial_no']=$row['serial_no'];
+     $usernamee=$row['username'];
+ $passwordd=$row['password'];
+     $_SESSION['zone']=$row['zone'];
+     if($usernamee == $username && $passwordd == $password)
+ {
+     header("Location:admin/index.php");
+}
+echo "<div style='position:absolute; top:360px; left:390px;'><font style='margin-left:30px; font-family:times new roman; font-size:19px; color:red;'>please enter correct password <br>and username!</font></div>"; ;
+  
+ }
+else if ($user_type=="inspector") {
+  $_SESSION["inspector_logged"] = "true";
+    $_SESSION['id']=$row['id'];
+    $_SESSION['serial_no']=$row['serial_no'];
+     $usernamee=$row['username'];
+ $passwordd=$row['password'];
+     $_SESSION['zone']=$row['zone'];
+     if($usernamee == $username && $passwordd == $password)
+ {
+     header("Location:inspector/index.php");
+}
+echo "<div style='position:absolute; top:360px; left:790px;'><font style='margin-left:30px; font-family:times new roman; font-size:19px; color:red;'>please enter correct password <br>and username!</font></div>"; ;
+  
+ }
+else if ($user_type=="policeofficer") {
+  $_SESSION["policeofficer_logged"] = "true";
+    $_SESSION['id']=$row['id'];
+    $_SESSION['serial_no']=$row['serial_no'];
+     $usernamee=$row['username'];
+ $passwordd=$row['password'];
+     $_SESSION['zone']=$row['zone'];
+     if($usernamee == $username && $passwordd == $password)
+ {
+     header("Location:policeofficer/index.php");
+     
+}
+echo "<div style='position:absolute; top:360px; left:790px;'><font style='margin-left:30px; font-family:times new roman; font-size:19px; color:red;'>please enter correct password <br>and username!</font></div>"; ;
+  
+ }
+else if ($user_type=="comissioner") {
+  $_SESSION["comissioner_logged"] = "true";
+    $_SESSION['id']=$row['id'];
+    $_SESSION['serial_no']=$row['serial_no'];
+     $usernamee=$row['username'];
+ $passwordd=$row['password'];
+     $_SESSION['zone']=$row['zone'];
+     if($usernamee == $username && $passwordd == $password)
+ {
+     header("Location:comissioner/index.php");
+}
+echo "<div style='position:absolute; top:360px; left:1290px;'><font style='margin-left:30px; font-family:times new roman; font-size:25px; color:red;'>please enter correct password <br>and username!</font></div>"; ;
+  
+ }
+else{
+    echo "<div style='position:absolute; top:360px; left:1290px;'><font style='margin-left:30px; font-family:times new roman; font-size:25px; color:red;'>please enter correct password <br>and username!</font></div>"; ;
+   }
+}
+}
+else{
+ echo "<div style='position:absolute; top:360px; left:1290px;'><font style='margin-left:85px; font-family:times new roman; font-size:25px; color:red;'>incorrect password and username!</font></div>";  
+}
+ }}
+
+}}
+ ?>change this code to java jsp code
+
+haymro animaw, [1/26/2023 11:13 PM]
+𝟒𝐙: Here is an example of how the provided PHP code could be translated to Java JSP code:
+
+
+<%@page import="java.sql.*"%>
+<%
+  String username = request.getParameter("username");
+  String password = request.getParameter("password");
+  if(username != null && password != null){
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    try{
+      Class.forName("com.mysql.jdbc.Driver");
+      con = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbname", "username", "password");
+      ps = con.prepareStatement("SELECT * FROM account WHERE username = ? AND password = ? AND status = '1'");
+      ps.setString(1, username);
+      ps.setString(2, password);
+      rs = ps.executeQuery();
+      if(rs.next()){
+        String userType = rs.getString("account_type");
+        if(userType.equals("adminstrator")){
+          session.setAttribute("admin_logged", "true");
+          session.setAttribute("id", rs.getInt("id"));
+          session.setAttribute("serial_no", rs.getString("serial_no"));
+          session.setAttribute("zone", rs.getString("zone"));
+          if(username.equals(rs.getString("username")) && password.equals(rs.getString("password"))){
+            response.sendRedirect("admin/index.jsp");
+          }else{
+            out.println("<div style='position:absolute; top:360px; left:790px;'><font style='margin-left:30px; font-family:times new roman; font-size:19px; color:red;'>Incorrect username or password <br>and username!</font></div>");
+          }
+        }else if(userType.equals("inspector")){
+          session.setAttribute("inspector_logged", "true");
+          session.setAttribute("id", rs.getInt("id"));
+          session.setAttribute("serial_no", rs.getString("serial_no"));
+          session.setAttribute("zone", rs.getString("zone"));
+          if(username.equals(rs.getString("username")) && password.equals(rs.getString("password"))){
+            response.sendRedirect("inspector/index.jsp");
+
+
+
+another
+%@ page import = "java.sql.*" %>
+<%@ page import = "javax.sql.*" %>
+<%@ page import = "javax.servlet.http.*" %>
+
+<%
+    String username = request.getParameter("username");
+    String password = request.getParameter("password");
+    if (username != null && password != null) {
+        Connection con = null;
+        Statement st = null;
+        ResultSet rs = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://hostname:port/dbname", "username", "password");
+            st = con.createStatement();
+            String sql = "SELECT * FROM account WHERE username='" + username + "' AND password='" + password + "' AND status='1'";
+            rs = st.executeQuery(sql);
+            if (rs.next()) {
+                HttpSession session = request.getSession();
+                session.setAttribute("id", rs.getString("id"));
+                session.setAttribute("serial_no", rs.getString("serial_no"));
+                session.setAttribute("username", rs.getString("username"));
+                session.setAttribute("password", rs.getString("password"));
+                session.setAttribute("zone", rs.getString("zone"));
+                String user_type = rs.getString("account_type");
+                if (user_type.equals("prisoner")) {
+                    response.sendRedirect("prisoner/index.jsp");
+                } else if (user_type.equals("adminstrator")) {
+                    response.sendRedirect("admin/index.jsp");
+                } else if (user_type.equals("inspector")) {
+                    response.sendRedirect("inspector/index.jsp");
+                } else if (user_type.equals("policeofficer")) {
+                    response.sendRedirect("policeofficer/index.jsp");
+                } else if (user_type.equals("visitor")) {
+                    response.sendRedirect("visitor/index.jsp");
+                } else if (user_type.equals("comissioner")) {
+                    response.sendRedirect("comissioner/index.jsp");
+                } else {
+                    out.println("<p>Invalid account type</p>");
+                }
+            } else {
+                out.println("<p>Incorrect username or password</p>");
+            }
+        } catch (SQLException e) {
+            out.println("<p>Error: " + e.getMessage() + "</p>");
+        } catch (ClassNotFoundException e) {
+            out.println("<p>Error: " + e.getMessage() + "</p>");
+        } finally {
+            if (rs != null) {
